@@ -9,8 +9,8 @@ app.use(cors());
 app.use(express.json());
 
 // Test route
-app.get('/', (req, res) => {
-  res.json({ message: 'Server is running!' });
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Backend connected successfully!' });
 });
 
 // Connect to MongoDB and start server
