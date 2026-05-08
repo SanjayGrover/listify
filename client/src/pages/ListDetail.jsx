@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import SortableItem from '../components/SortableItem';
+import SharePanel from '../components/SharePanel';
 import {
   DndContext,
   closestCenter,
@@ -26,6 +27,7 @@ const ListDetail = () => {
   const [expandedItems, setExpandedItems] = useState({});
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState('');
+  const [showShare, setShowShare] = useState(false);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -147,7 +149,6 @@ const ListDetail = () => {
   };
 
   if (loading) return <p style={{ padding: '2rem' }}>Loading...</p>;
-  if (error) return <p style={{ padding: '2rem', color: 'red' }}>{error}</p>;
 
   return (
     <div style={styles.container}>
@@ -170,9 +171,15 @@ const ListDetail = () => {
             {list.title} ✏️
           </h2>
         )}
+        <button onClick={() => setShowShare(prev => !prev)} style={styles.shareToggleBtn}>
+          {showShare ? 'Hide Share' : '🔗 Share'}
+        </button>
       </div>
 
       <div style={styles.main}>
+        {/* Share List Form */}
+        {showShare && <SharePanel listId={id} />}
+
         {/* Add Item Form */}
         <form onSubmit={handleAddItem} style={styles.addForm}>
           <input
@@ -185,7 +192,12 @@ const ListDetail = () => {
           <button style={styles.addBtn} type="submit">+ Add</button>
         </form>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && (
+          <div style={styles.errorBanner}>
+            <span>{error}</span>
+            <button onClick={() => setError('')} style={styles.errorClose}>✕</button>
+          </div>
+        )}
 
         {/* Drag & Drop List */}
         {list.items.length === 0 ? (
@@ -268,6 +280,7 @@ const ListDetail = () => {
           </DndContext>
         )}
       </div>
+
     </div>
   );
 };
@@ -300,6 +313,9 @@ const styles = {
   subAddForm: { display: 'flex', gap: '0.5rem', marginTop: '0.5rem' },
   subInput: { flex: 1, padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.9rem' },
   subAddBtn: { padding: '0.5rem 0.75rem', borderRadius: '6px', border: 'none', backgroundColor: '#4f46e5', color: '#fff', fontSize: '0.9rem', cursor: 'pointer' },
+  shareToggleBtn: { marginLeft: 'auto', padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #4f46e5', color: '#4f46e5', backgroundColor: '#fff', cursor: 'pointer' },
+  errorBanner: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fee2e2', border: '1px solid #fca5a5', color: '#b91c1c', padding: '0.75rem 1rem', borderRadius: '8px', marginBottom: '1rem' },
+  errorClose: { background: 'none', border: 'none', color: '#b91c1c', fontSize: '1rem', cursor: 'pointer' },
 };
 
 export default ListDetail;
