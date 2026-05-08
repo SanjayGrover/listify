@@ -5,6 +5,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const listRoutes = require('./routes/lists');
 const itemRoutes = require('./routes/items');
+const passwordRoutes = require('./routes/password');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/lists/:id/items', itemRoutes);
+app.use('/api/password', passwordRoutes);
 
 // Test route
 app.get('/api/test', (req, res) => {
