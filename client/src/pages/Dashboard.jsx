@@ -1,2 +1,2 @@
-const Register = () => <div>Register Page</div>;
+const Register = () => <div>Dashboard</div>;
 export default Register;
