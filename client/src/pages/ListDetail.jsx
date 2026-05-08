@@ -1,6 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import SortableItem from '../components/SortableItem';
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable';
 
 const ListDetail = () => {
   const { id } = useParams();
@@ -13,6 +26,8 @@ const ListDetail = () => {
   const [expandedItems, setExpandedItems] = useState({});
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState('');
+
+  const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     fetchList();
@@ -27,6 +42,28 @@ const ListDetail = () => {
       setError('Failed to load list');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // --- Drag & Drop Handler ---
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = list.items.findIndex(i => i._id === active.id);
+    const newIndex = list.items.findIndex(i => i._id === over.id);
+    const reordered = arrayMove(list.items, oldIndex, newIndex);
+
+    // Optimistic update
+    setList({ ...list, items: reordered });
+
+    try {
+      await api.put(`/lists/${id}/items/reorder/all`, {
+        orderedIds: reordered.map(i => i._id),
+      });
+    } catch {
+      setError('Failed to save new order');
+      fetchList(); // Revert on failure
     }
   };
 
@@ -148,70 +185,87 @@ const ListDetail = () => {
           <button style={styles.addBtn} type="submit">+ Add</button>
         </form>
 
-        {/* Items List */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        {/* Drag & Drop List */}
         {list.items.length === 0 ? (
           <p style={styles.empty}>No items yet. Add one above!</p>
         ) : (
-          <ul style={styles.itemList}>
-            {list.items.map(item => (
-              <li key={item._id} style={styles.itemCard}>
-                {/* Item Row */}
-                <div style={styles.itemRow}>
-                  <input
-                    type="checkbox"
-                    checked={item.completed}
-                    onChange={() => handleToggleItem(item._id, item.completed)}
-                    style={styles.checkbox}
-                  />
-                  <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? '#aaa' : '#000' }}>
-                    {item.text}
-                  </span>
-                  <div style={styles.itemActions}>
-                    <button
-                      onClick={() => toggleExpand(item._id)}
-                      style={styles.subBtn}
-                      title="Toggle subitems"
-                    >
-                      {expandedItems[item._id] ? '▲' : '▼'} {item.subItems.length}
-                    </button>
-                    <button onClick={() => handleDeleteItem(item._id)} style={styles.deleteBtn}>🗑</button>
-                  </div>
-                </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={list.items.map(i => i._id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <ul style={styles.itemList}>
+                {list.items.map(item => (
+                  <SortableItem key={item._id} id={item._id}>
+                    {({ dragHandleProps }) => (
+                      <li style={styles.itemCard}>
+                        {/* Item Row */}
+                        <div style={styles.itemRow}>
+                          <span {...dragHandleProps} style={styles.dragHandle} title="Drag to reorder">⠿</span>
+                          <input
+                            type="checkbox"
+                            checked={item.completed}
+                            onChange={() => handleToggleItem(item._id, item.completed)}
+                            style={styles.checkbox}
+                          />
+                          <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? '#aaa' : '#000' }}>
+                            {item.text}
+                          </span>
+                          <div style={styles.itemActions}>
+                            <button
+                              onClick={() => toggleExpand(item._id)}
+                              style={styles.subBtn}
+                              title="Toggle subitems"
+                            >
+                              {expandedItems[item._id] ? '▲' : '▼'} {item.subItems.length}
+                            </button>
+                            <button onClick={() => handleDeleteItem(item._id)} style={styles.deleteBtn}>🗑</button>
+                          </div>
+                        </div>
 
-                {/* Subitems */}
-                {expandedItems[item._id] && (
-                  <div style={styles.subItemSection}>
-                    {item.subItems.map(sub => (
-                      <div key={sub._id} style={styles.subItemRow}>
-                        <input
-                          type="checkbox"
-                          checked={sub.completed}
-                          onChange={() => handleToggleSubItem(item._id, sub._id, sub.completed)}
-                          style={styles.checkbox}
-                        />
-                        <span style={{ ...styles.itemText, fontSize: '0.9rem', textDecoration: sub.completed ? 'line-through' : 'none', color: sub.completed ? '#aaa' : '#555' }}>
-                          {sub.text}
-                        </span>
-                        <button onClick={() => handleDeleteSubItem(item._id, sub._id)} style={styles.deleteBtn}>🗑</button>
-                      </div>
-                    ))}
-
-                    {/* Add Subitem Form */}
-                    <form onSubmit={(e) => handleAddSubItem(e, item._id)} style={styles.subAddForm}>
-                      <input
-                        style={styles.subInput}
-                        type="text"
-                        placeholder="Add subitem..."
-                        value={newSubItemText[item._id] || ''}
-                        onChange={(e) => setNewSubItemText({ ...newSubItemText, [item._id]: e.target.value })}
-                      />
-                      <button style={styles.subAddBtn} type="submit">+ Add</button>
-                    </form>
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+                        {/* Subitems */}
+                        {expandedItems[item._id] && (
+                          <div style={styles.subItemSection}>
+                            {item.subItems.map(sub => (
+                              <div key={sub._id} style={styles.subItemRow}>
+                                <input
+                                  type="checkbox"
+                                  checked={sub.completed}
+                                  onChange={() => handleToggleSubItem(item._id, sub._id, sub.completed)}
+                                  style={styles.checkbox}
+                                />
+                                <span style={{ ...styles.itemText, fontSize: '0.9rem', textDecoration: sub.completed ? 'line-through' : 'none', color: sub.completed ? '#aaa' : '#555' }}>
+                                  {sub.text}
+                                </span>
+                                <button onClick={() => handleDeleteSubItem(item._id, sub._id)} style={styles.deleteBtn}>🗑</button>
+                              </div>
+                            ))}
+                            {/* Add Subitem Form */}
+                            <form onSubmit={(e) => handleAddSubItem(e, item._id)} style={styles.subAddForm}>
+                              <input
+                                style={styles.subInput}
+                                type="text"
+                                placeholder="Add subitem..."
+                                value={newSubItemText[item._id] || ''}
+                                onChange={(e) => setNewSubItemText({ ...newSubItemText, [item._id]: e.target.value })}
+                              />
+                              <button style={styles.subAddBtn} type="submit">+ Add</button>
+                            </form>
+                          </div>
+                        )}
+                      </li>
+                    )}
+                  </SortableItem>
+                ))}
+              </ul>
+            </SortableContext>
+          </DndContext>
         )}
       </div>
     </div>
@@ -235,6 +289,7 @@ const styles = {
   itemList: { listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' },
   itemCard: { backgroundColor: '#fff', borderRadius: '8px', padding: '1rem', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' },
   itemRow: { display: 'flex', alignItems: 'center', gap: '0.75rem' },
+  dragHandle: { cursor: 'grab', fontSize: '1.2rem', color: '#aaa', userSelect: 'none' },
   checkbox: { width: '18px', height: '18px', cursor: 'pointer' },
   itemText: { flex: 1, fontSize: '1rem' },
   itemActions: { display: 'flex', gap: '0.5rem' },
