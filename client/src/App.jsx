@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import ListDetail from './pages/ListDetail';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/lists/:id" element={<ProtectedRoute> <ListDetail /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
