@@ -226,7 +226,7 @@ const ListDetail = () => {
                             onChange={() => handleToggleItem(item._id, item.completed)}
                             style={styles.checkbox}
                           />
-                          <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? '#aaa' : '#CC5500' }}>
+                          <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? 'var(--text-muted)' : 'var(--text-primary)' }}>
                             {item.text}
                           </span>
                           <div style={styles.itemActions}>
@@ -252,7 +252,7 @@ const ListDetail = () => {
                                   onChange={() => handleToggleSubItem(item._id, sub._id, sub.completed)}
                                   style={styles.checkbox}
                                 />
-                                <span style={{ ...styles.itemText, fontSize: '0.9rem', textDecoration: sub.completed ? 'line-through' : 'none', color: sub.completed ? '#aaa' : '#555' }}>
+                                <span style={{ ...styles.itemText, fontSize: '0.9rem', textDecoration: sub.completed ? 'line-through' : 'none', color: sub.completed ? 'var(--text-muted)' : 'var(--text-secondary)' }}>
                                   {sub.text}
                                 </span>
                                 <button onClick={() => handleDeleteSubItem(item._id, sub._id)} style={styles.deleteBtn}>🗑</button>
