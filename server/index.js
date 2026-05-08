@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const listRoutes = require('./routes/lists');
+const itemRoutes = require('./routes/items');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/lists', listRoutes);
+app.use('/api/lists/:id/items', itemRoutes);
 
 // Test route
 app.get('/api/test', (req, res) => {
