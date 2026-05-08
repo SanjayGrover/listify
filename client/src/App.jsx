@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ListDetail from './pages/ListDetail';
 import { useAuth } from './context/AuthContext';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const RootRedirect = () => {
   const { user, loading } = useAuth();
@@ -27,6 +29,8 @@ function App() {
           } />
           <Route path="*" element={<RootRedirect />} />
           <Route path="/lists/:id" element={<ProtectedRoute> <ListDetail /></ProtectedRoute>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

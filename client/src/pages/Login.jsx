@@ -58,6 +58,11 @@ const Login = () => {
         <p style={styles.link}>
           Don't have an account? <Link to="/register">Register</Link>
         </p>
+        <p style={{ textAlign: 'right', marginTop: '-0.5rem' }}>
+          <Link to="/forgot-password" style={{ fontSize: '0.85rem', color: 'var(--accent-text)' }}>
+            Forgot password?
+          </Link>
+        </p>
       </div>
     </div>
   );
