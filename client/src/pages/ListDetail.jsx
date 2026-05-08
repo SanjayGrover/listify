@@ -226,7 +226,7 @@ const ListDetail = () => {
                             onChange={() => handleToggleItem(item._id, item.completed)}
                             style={styles.checkbox}
                           />
-                          <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? '#aaa' : '#000' }}>
+                          <span style={{ ...styles.itemText, textDecoration: item.completed ? 'line-through' : 'none', color: item.completed ? '#aaa' : '#CC5500' }}>
                             {item.text}
                           </span>
                           <div style={styles.itemActions}>
