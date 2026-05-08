@@ -107,22 +107,22 @@ const SharePanel = ({ listId }) => {
 };
 
 const styles = {
-  panel: { backgroundColor: '#fff', borderRadius: '8px', padding: '1.25rem', boxShadow: '0 2px 6px rgba(0,0,0,0.06)', marginBottom: '1.5rem' },
-  heading: { margin: '0 0 1rem 0', fontSize: '1rem', color: '#4f46e5' },
+  panel: { backgroundColor: 'var(--bg-card)', borderRadius: '8px', padding: '1.25rem', boxShadow: `0 2px 6px var(--shadow)`, marginBottom: '1.5rem' },
+  heading: { margin: '0 0 1rem 0', fontSize: '1rem', color: 'var(--accent-text)' },
   form: { display: 'flex', gap: '0.5rem', flexWrap: 'wrap' },
-  input: { flex: 1, minWidth: '180px', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.95rem' },
-  select: { padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid #ccc', fontSize: '0.95rem', cursor: 'pointer' },
-  shareBtn: { padding: '0.6rem 1rem', borderRadius: '6px', border: 'none', backgroundColor: '#4f46e5', color: '#fff', fontSize: '0.95rem', cursor: 'pointer' },
-  success: { color: 'green', marginTop: '0.5rem', fontSize: '0.9rem' },
-  error: { color: 'red', marginTop: '0.5rem', fontSize: '0.9rem' },
-  subHeading: { margin: '1rem 0 0.5rem', fontSize: '0.9rem', color: '#888' },
+  input: { flex: 1, minWidth: '180px', padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.95rem', backgroundColor: 'var(--bg-input)', color: 'var(--text-primary)' },
+  select: { padding: '0.6rem 0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '0.95rem', cursor: 'pointer', backgroundColor: 'var(--bg-input)', color: 'var(--text-primary)' },
+  shareBtn: { padding: '0.6rem 1rem', borderRadius: '6px', border: 'none', backgroundColor: 'var(--accent)', color: '#fff', fontSize: '0.95rem', cursor: 'pointer' },
+  success: { color: 'var(--success-text)', marginTop: '0.5rem', fontSize: '0.9rem' },
+  error: { color: 'var(--error-text)', marginTop: '0.5rem', fontSize: '0.9rem' },
+  subHeading: { margin: '1rem 0 0.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' },
   userList: { marginTop: '0.5rem' },
-  userRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid #f0f0f0' },
-  userName: { fontWeight: 600, fontSize: '0.95rem' },
-  userEmail: { fontSize: '0.85rem', color: '#888' },
+  userRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border-light)' },
+  userName: { fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-primary)' },
+  userEmail: { fontSize: '0.85rem', color: 'var(--text-muted)' },
   userRight: { display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  roleBadge: { fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '999px', backgroundColor: '#e0e7ff', color: '#4f46e5', fontWeight: 600 },
-  removeBtn: { background: 'none', border: 'none', cursor: 'pointer', color: '#aaa', fontSize: '1rem' },
+  roleBadge: { fontSize: '0.75rem', padding: '0.2rem 0.5rem', borderRadius: '999px', backgroundColor: 'var(--badge-bg)', color: 'var(--badge-text)', fontWeight: 600 },
+  removeBtn: { background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: '1rem' },
 };
 
 export default SharePanel;

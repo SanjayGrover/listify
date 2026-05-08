@@ -64,14 +64,14 @@ const Login = () => {
 };
 
 const styles = {
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f0f2f5' },
-  card: { backgroundColor: '#fff', padding: '2rem', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '100%', maxWidth: '400px' },
-  title: { marginBottom: '1.5rem', textAlign: 'center' },
+  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: 'var(--bg-page)' },
+  card: { backgroundColor: 'var(--bg-card)', padding: '2rem', borderRadius: '8px', boxShadow: `0 2px 10px var(--shadow)`, width: '100%', maxWidth: '400px' },
+  title: { marginBottom: '1.5rem', textAlign: 'center', color: 'var(--text-primary)' },
   form: { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  input: { padding: '0.75rem', borderRadius: '6px', border: '1px solid #ccc', fontSize: '1rem' },
-  button: { padding: '0.75rem', borderRadius: '6px', border: 'none', backgroundColor: '#4f46e5', color: '#fff', fontSize: '1rem', cursor: 'pointer' },
-  error: { color: 'red', marginBottom: '1rem', textAlign: 'center' },
-  link: { marginTop: '1rem', textAlign: 'center' },
+  input: { padding: '0.75rem', borderRadius: '6px', border: '1px solid var(--border-color)', fontSize: '1rem', backgroundColor: 'var(--bg-input)', color: 'var(--text-primary)' },
+  button: { padding: '0.75rem', borderRadius: '6px', border: 'none', backgroundColor: 'var(--accent)', color: '#fff', fontSize: '1rem', cursor: 'pointer' },
+  error: { color: 'var(--error-text)', marginBottom: '1rem', textAlign: 'center' },
+  link: { marginTop: '1rem', textAlign: 'center', color: 'var(--text-secondary)' },
 };
 
 export default Login;
